@@ -23,6 +23,7 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Spanned;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,11 +53,13 @@ import dev.oneuiproject.oneui.layout.ToolbarLayout;
 
 public class MainActivity extends AppCompatActivity {
 
-    final String PREFS = "BatOSC";
-    final String KEY_PORT = "port";
-    final String KEY_IP = "ip";
-    final String KEY_PRMT_BATTERYLEVEL = "batteryLevel";
-    final String KEY_PRMT_ISCHARGING = "isCharging";
+    static final String PREFS = "BatOSC";
+    static final String KEY_PORT = "port";
+    static final String KEY_IP = "ip";
+    static final String KEY_PRMT_BATTERYLEVEL = "batteryLevel";
+    static final String KEY_PRMT_ISCHARGING = "isCharging";
+
+    static final String KEY_LABS_SHOW_PRAMETER_PATH = "labs_prmtPath";
 
     final String IP_VALIDATION = "^[0-9]{1,3}\\.[0-9]{0,3}\\.[0-9]{0,3}\\.[0-9]{0,3}$";
     static final String NOTIFICATION_CHANNEL_ID = "1001";
@@ -68,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences.Editor editor;
 
     private String prmt_ipAddr,prmt_port, prmtNm_batteryLevel, prmtNm_isCharge;
+    private boolean setting_showPrmtPath;
 
     private int batteryLevel;
     private boolean isCharge;
@@ -78,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView text_batteryLevel;
 
     private UiHander uiHander;
+    private BackgoundThread thread;
 
     @SuppressLint("NotificationPermission")
     @Override
@@ -99,15 +104,6 @@ public class MainActivity extends AppCompatActivity {
 
         toolbarLayout.setCustomTitleView(extendedView, layoutParams);
 
-        //환경설정 핸들
-        mprefs = getSharedPreferences(PREFS, MODE_PRIVATE);
-        editor = mprefs.edit();
-
-        //첫 데이터 초기화
-        prmt_ipAddr = mprefs.getString(KEY_IP, "192.168.0.1");
-        prmt_port = mprefs.getString(KEY_PORT, "9001");
-        prmtNm_batteryLevel = mprefs.getString(KEY_PRMT_BATTERYLEVEL, "battery_level");
-        prmtNm_isCharge = mprefs.getString(KEY_PRMT_ISCHARGING, "is_charging");
 
         //알림 선언
         Intent notificationIntent = new Intent(this, MainActivity.class);
@@ -146,23 +142,41 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
 
-        //ui 핸들러
+    @Override
+    protected void onResume(){
+        super.onResume();
+        //환경설정 핸들
+        mprefs = getSharedPreferences(PREFS, MODE_PRIVATE);
+        editor = mprefs.edit();
+
+        Log.d("trace", "loaded save data:" + mprefs.getAll());
+
+        //첫 데이터 초기화
+        prmt_ipAddr = mprefs.getString(KEY_IP, "192.168.0.1");
+        prmt_port = mprefs.getString(KEY_PORT, "9001");
+        prmtNm_batteryLevel = mprefs.getString(KEY_PRMT_BATTERYLEVEL, "battery_level");
+        prmtNm_isCharge = mprefs.getString(KEY_PRMT_ISCHARGING, "is_charging");
+        setting_showPrmtPath = mprefs.getBoolean(KEY_LABS_SHOW_PRAMETER_PATH, false);
+
+        //핸들러
         uiHander = new UiHander();
-        BackgoundThread thread = new BackgoundThread();
+        thread = new BackgoundThread();
         thread.start();
 
-        //뷰 <-> 데이터 동기화
         update();
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+
+        thread.interrupt();
     }
 
     //<커스텀 함수
     private void update(){
-        text_batteryLevel.setText(String.format("%d%%", batteryLevel));
-        if(isCharge){
-            text_batteryLevel.append("(충전중)");
-        }
-
         card_ip = (CardView) findViewById(R.id.ip_addr);
         card_ip.setSummaryText(prmt_ipAddr);
 
@@ -479,6 +493,8 @@ public class MainActivity extends AppCompatActivity {
 
                 editor.putString(KEY_PRMT_ISCHARGING, prmtNm_isCharge);
                 editor.apply();
+
+                update();
             }
         });
 
@@ -530,18 +546,33 @@ public class MainActivity extends AppCompatActivity {
             batteryLevel = bundle.getInt("s_batLv");
             isCharge = bundle.getBoolean("b_isCharging");
 
-            update();
+            text_batteryLevel.setText(String.format("%d%%", batteryLevel));
+            if(isCharge){
+                text_batteryLevel.append("(충전중)");
+            }
         }
     }
 
+    // 백그라운드 쓰레드
     class BackgoundThread extends Thread{
 
         public void run(){
+            super.run();
+
+            Log.d("trace", "Thread started");
+
+            int old_batterypct = 0;
+            boolean old_isCharging = false;
+
             while(true){
                 try{
                     Thread.sleep(100);
+                }catch (InterruptedException e){
+                    Log.d("trace", "main activity thread interrupted");
+                    break;
                 }catch (Exception e){
-                    e.printStackTrace();
+                    Log.e("trace", e.toString());
+                    break;
                 }
 
                 IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
@@ -564,8 +595,13 @@ public class MainActivity extends AppCompatActivity {
                 bundle.putBoolean("b_isCharging", isCharging);
 
                 message.setData(bundle);
-                uiHander.sendMessage(message);
 
+                if(old_batterypct != (int)batteryPct || old_isCharging != isCharging){
+
+                    old_batterypct = (int)batteryPct;
+                    old_isCharging = isCharging;
+                    uiHander.sendMessage(message);
+                }
             }
         }
     }

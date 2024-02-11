@@ -63,7 +63,7 @@
                 android:gravity="start|center">
 
                 <androidx.appcompat.widget.SeslToggleSwitch
-                    android:id="@+id/sesl_switchbar_switch"
+                    android:id="@+id/sesl_cardview_switch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"

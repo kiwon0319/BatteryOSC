@@ -32,6 +32,7 @@
                 android:orientation="vertical"
                 android:background="@color/oui_background_color">
                 <com.example.batteryosc.CardView
+                    android:id="@+id/card_prmtPath"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:TitleText="parameter path"
