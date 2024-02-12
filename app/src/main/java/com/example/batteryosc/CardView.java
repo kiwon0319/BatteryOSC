@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.SeslToggleSwitch;
 import androidx.core.content.ContextCompat;
 
 import com.example.batteryosc.R;
@@ -28,6 +29,7 @@ public class CardView extends LinearLayout {
     private ImageView mIconImageView;
     private TextView mTitleTextView;
     private TextView mSummaryTextView;
+    private SeslToggleSwitch mToggleswitch;
     private View mDividerView;
 
     private int mIconColor;
@@ -71,6 +73,18 @@ public class CardView extends LinearLayout {
             }
         }else if(mIsToogleSwitch){
             inflate(mContext, R.layout.sample3_widget_cardview_toggleswitch, this);
+            mToggleswitch = (SeslToggleSwitch) findViewById(R.id.sesl_cardview_switch);
+
+            setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mToggleswitch.isChecked()){
+                        mToggleswitch.setChecked(false);
+                    } else if (!mToggleswitch.isChecked()){
+                        mToggleswitch.setChecked(true);
+                    }
+                }
+            });
         }
         else {
             inflate(mContext, R.layout.sample3_widget_cardview, this);

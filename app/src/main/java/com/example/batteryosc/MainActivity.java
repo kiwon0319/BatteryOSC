@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
     private int batteryLevel;
     private boolean isCharge;
 
-    private CardView card_ip, card_port, card_prmt, card_isCharging;
+    private CardView card_ip, card_port, card_prmt, card_isCharging, card_prmtPath;
     private SeslSwitchBar swichbar;
 
     private TextView text_batteryLevel;
@@ -175,6 +175,18 @@ public class MainActivity extends AppCompatActivity {
         thread.interrupt();
     }
 
+    @Override
+    protected void onStop(){
+        super.onStop();
+
+        editor.putString(KEY_IP, prmt_ipAddr);
+        editor.putString(KEY_PORT, prmt_port);
+        editor.putString(KEY_PRMT_BATTERYLEVEL, prmtNm_batteryLevel);
+        editor.putString(KEY_PRMT_ISCHARGING, prmtNm_isCharge);
+
+        editor.apply();
+    }
+
     //<커스텀 함수
     private void update(){
         card_ip = (CardView) findViewById(R.id.ip_addr);
@@ -183,11 +195,21 @@ public class MainActivity extends AppCompatActivity {
         card_port = (CardView) findViewById(R.id.port_name);
         card_port.setSummaryText(prmt_port);
 
+        card_prmtPath = (CardView) findViewById(R.id.prmt_prtmPath);
+
         card_prmt = (CardView) findViewById(R.id.parm_batteryLevel);
         card_prmt.setSummaryText(prmtNm_batteryLevel);
 
         card_isCharging = (CardView) findViewById(R.id.parm_IsCharging);
         card_isCharging.setSummaryText(prmtNm_isCharge);
+
+        if(setting_showPrmtPath){
+            card_prmtPath.setVisibility(View.VISIBLE);
+            card_prmt.setDividerVisible(true);
+        }else{
+            card_prmtPath.setVisibility(View.GONE);
+            card_prmt.setDividerVisible(false);
+        }
     }
 
     private boolean checkIp(EditText et){

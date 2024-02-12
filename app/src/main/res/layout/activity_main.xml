@@ -60,6 +60,15 @@
                android:orientation="vertical"
                android:background="@color/oui_background_color">
                <com.example.batteryosc.CardView
+                   android:id="@+id/prmt_prtmPath"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   app:TitleText="Parameter path"
+                   app:isSummayTextAccent="true"
+                   app:SummaryText="/avatar/parameters/"
+                   android:visibility="gone"/>
+
+               <com.example.batteryosc.CardView
                    android:id="@+id/parm_batteryLevel"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
