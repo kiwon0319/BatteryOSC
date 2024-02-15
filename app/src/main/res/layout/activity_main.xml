@@ -47,7 +47,7 @@
                    app:isDividerViewVisible="true"
                    app:TitleText="Port"
                    app:isSummayTextAccent="true"
-                   app:SummaryText="9001"/>
+                   app:SummaryText="9000"/>
            </dev.oneuiproject.oneui.widget.RoundLinearLayout>
            <dev.oneuiproject.oneui.widget.Separator
                android:layout_width="match_parent"
@@ -63,6 +63,7 @@
                    android:id="@+id/prmt_prtmPath"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
+                   android:onClick="btnPrmtPath"
                    app:TitleText="Parameter path"
                    app:isSummayTextAccent="true"
                    app:SummaryText="/avatar/parameters/"
@@ -72,7 +73,7 @@
                    android:id="@+id/parm_batteryLevel"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
-                   android:onClick="btnParmBatteryLevel"
+                   android:onClick="btnPrmtBatteryLevel"
                    app:TitleText="Battery Level"
                    app:isSummayTextAccent="true"
                    app:SummaryText="battery_level"/>

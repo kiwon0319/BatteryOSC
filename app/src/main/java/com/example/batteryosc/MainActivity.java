@@ -2,6 +2,7 @@ package com.example.batteryosc;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -36,6 +37,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SeslSwitchBar;
@@ -51,6 +53,7 @@ import java.util.regex.Pattern;
 
 import dev.oneuiproject.oneui.layout.ToolbarLayout;
 
+@RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
 public class MainActivity extends AppCompatActivity {
 
     static final String PREFS = "BatOSC";
@@ -58,19 +61,16 @@ public class MainActivity extends AppCompatActivity {
     static final String KEY_IP = "ip";
     static final String KEY_PRMT_BATTERYLEVEL = "batteryLevel";
     static final String KEY_PRMT_ISCHARGING = "isCharging";
+    static final String KEY_PRMT_PATH = "prmtPath";
 
     static final String KEY_LABS_SHOW_PRAMETER_PATH = "labs_prmtPath";
 
     final String IP_VALIDATION = "^[0-9]{1,3}\\.[0-9]{0,3}\\.[0-9]{0,3}\\.[0-9]{0,3}$";
-    static final String NOTIFICATION_CHANNEL_ID = "1001";
-    private final String[] permissions = {
-            Manifest.permission.POST_NOTIFICATIONS
-    };
 
     private SharedPreferences mprefs;
     private SharedPreferences.Editor editor;
 
-    private String prmt_ipAddr,prmt_port, prmtNm_batteryLevel, prmtNm_isCharge;
+    private String prmt_ipAddr,prmt_port, prmtNm_batteryLevel, prmtNm_isCharge, prmtNm_prmtPath;
     private boolean setting_showPrmtPath;
 
     private int batteryLevel;
@@ -83,6 +83,10 @@ public class MainActivity extends AppCompatActivity {
 
     private UiHander uiHander;
     private BackgoundThread thread;
+
+    private final String[] permissions = {
+            Manifest.permission.POST_NOTIFICATIONS
+    };
 
     @SuppressLint("NotificationPermission")
     @Override
@@ -104,42 +108,26 @@ public class MainActivity extends AppCompatActivity {
 
         toolbarLayout.setCustomTitleView(extendedView, layoutParams);
 
-
-        //알림 선언
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent =
-                PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-
-        //권한 설정
+        //알림 권한 확인
         if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.O && PackageManager.PERMISSION_DENIED == ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)){
             // 푸쉬 권한 없음
             ActivityCompat.requestPermissions(this, permissions, 100);
         }
 
-        NotificationCompat.Builder builder
-                = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-                //.setContentTitle("")
-                //.setContentText("")
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
-
-        NotificationManager notificationManager = buildChannel(NOTIFICATION_CHANNEL_ID);
-
-        Notification noti = builder.build();
-        noti.flags = Notification.FLAG_ONGOING_EVENT;
-
         //스위치 뷰 선언
         swichbar = (SeslSwitchBar) findViewById(R.id.toggle_Send);
+
+        swichbar.setChecked(isLaunchingService(getApplicationContext()));
         swichbar.addOnSwitchChangeListener(new SeslSwitchBar.OnSwitchChangeListener(){
             @Override
             public void onSwitchChanged(SwitchCompat switchCompat, boolean isChecked) {
+                Intent intent = new Intent(MainActivity.this, OSCService.class);
                 if(isChecked){
-
-                    notificationManager.notify(123, noti);
+                    ContextCompat.startForegroundService(MainActivity.this, intent);
                 }else {
-
+                    stopService(intent);
                 }
+                update();
             }
         });
     }
@@ -155,10 +143,13 @@ public class MainActivity extends AppCompatActivity {
 
         //첫 데이터 초기화
         prmt_ipAddr = mprefs.getString(KEY_IP, "192.168.0.1");
-        prmt_port = mprefs.getString(KEY_PORT, "9001");
+        prmt_port = mprefs.getString(KEY_PORT, "9000");
+        prmtNm_prmtPath = mprefs.getString(KEY_PRMT_PATH, "/avatar/parameters/");
         prmtNm_batteryLevel = mprefs.getString(KEY_PRMT_BATTERYLEVEL, "battery_level");
         prmtNm_isCharge = mprefs.getString(KEY_PRMT_ISCHARGING, "is_charging");
         setting_showPrmtPath = mprefs.getBoolean(KEY_LABS_SHOW_PRAMETER_PATH, false);
+
+        applyPrefs();
 
         //핸들러
         uiHander = new UiHander();
@@ -179,15 +170,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop(){
         super.onStop();
 
-        editor.putString(KEY_IP, prmt_ipAddr);
-        editor.putString(KEY_PORT, prmt_port);
-        editor.putString(KEY_PRMT_BATTERYLEVEL, prmtNm_batteryLevel);
-        editor.putString(KEY_PRMT_ISCHARGING, prmtNm_isCharge);
-
-        editor.apply();
+        applyPrefs();
     }
 
     //<커스텀 함수
+    private boolean isLaunchingService(Context ctx){
+        ActivityManager manager = (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
+
+        for (ActivityManager.RunningServiceInfo service: manager.getRunningServices(Integer.MAX_VALUE)){
+            if(OSCService.class.getName().equals(service.service.getClassName())){
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void update(){
         card_ip = (CardView) findViewById(R.id.ip_addr);
         card_ip.setSummaryText(prmt_ipAddr);
@@ -196,6 +193,7 @@ public class MainActivity extends AppCompatActivity {
         card_port.setSummaryText(prmt_port);
 
         card_prmtPath = (CardView) findViewById(R.id.prmt_prtmPath);
+        card_prmtPath.setSummaryText(prmtNm_prmtPath);
 
         card_prmt = (CardView) findViewById(R.id.parm_batteryLevel);
         card_prmt.setSummaryText(prmtNm_batteryLevel);
@@ -210,6 +208,30 @@ public class MainActivity extends AppCompatActivity {
             card_prmtPath.setVisibility(View.GONE);
             card_prmt.setDividerVisible(false);
         }
+
+        if (swichbar.isChecked()){
+            card_ip.setEnabled(false);
+            card_port.setEnabled(false);
+            card_prmtPath.setEnabled(false);
+            card_prmt.setEnabled(false);
+            card_isCharging.setEnabled(false);
+        }else {
+            card_ip.setEnabled(true);
+            card_port.setEnabled(true);
+            card_prmtPath.setEnabled(true);
+            card_prmt.setEnabled(true);
+            card_isCharging.setEnabled(true);
+        }
+    }
+
+    private void applyPrefs(){
+        editor.putString(KEY_IP, prmt_ipAddr);
+        editor.putString(KEY_PORT, prmt_port);
+        editor.putString(KEY_PRMT_PATH, prmtNm_prmtPath);
+        editor.putString(KEY_PRMT_BATTERYLEVEL, prmtNm_batteryLevel);
+        editor.putString(KEY_PRMT_ISCHARGING, prmtNm_isCharge);
+
+        editor.apply();
     }
 
     private boolean checkIp(EditText et){
@@ -236,30 +258,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private NotificationManager buildChannel(String t_id){
-        NotificationManager notificationManager
-                = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        //안드로이드 Oreo 미만에서 버전 분기
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            CharSequence channelName = "Status";
-            String description = "show sending status";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-
-            NotificationChannel channel = new NotificationChannel(
-                    t_id,
-                    channelName,
-                    importance
-            );
-            channel.setDescription(description);
-
-            assert notificationManager != null;
-
-            notificationManager.createNotificationChannel(channel);
-        }
-
-        return notificationManager;
-    }
     //</커스텀 함수>
 
     //<툴바 메뉴>
@@ -427,7 +425,69 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    public void btnParmBatteryLevel(View view){
+    public void btnPrmtPath(View view){
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View textField = inflater.inflate(R.layout.dialog_textedit, null);
+
+        EditText et = textField.findViewById(R.id.dlg_editText);
+        et.setText(prmtNm_prmtPath);
+
+        AlertDialog.Builder dlg = new AlertDialog.Builder(MainActivity.this);
+        dlg.setTitle("파라미터 경로 설정");
+        dlg.setMessage("OSC 파라미터를 전달 할 경로를 설정합니다.");
+        dlg.setView(textField);
+
+        //완료 버튼
+        dlg.setPositiveButton(dev.oneuiproject.oneui.design.R.string.oui_common_done, new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int whichButton){
+                Dialog f = (Dialog) dialog;
+
+                EditText textField = (EditText) f.findViewById(R.id.dlg_editText);
+                prmtNm_prmtPath = textField.getText().toString();
+
+                editor.putString(KEY_PRMT_PATH, prmtNm_prmtPath);
+                editor.apply();
+                update();
+            }
+        });
+
+        //취소 버튼
+        dlg.setNegativeButton(dev.oneuiproject.oneui.design.R.string.oui_common_cancel, new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int whichButton){}
+        });
+
+        AlertDialog dialog = dlg.create();
+
+        //입력 오류 검사
+        et.addTextChangedListener(new TextWatcher(){
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2){}
+            @Override
+            public void afterTextChanged(Editable editable){}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2){
+                if(isEmpty(et)){
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                }else if(et.getText().toString().equals(prmtNm_isCharge)){
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                }
+                else{
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+                }
+            }
+        });
+
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        et.selectAll();
+        dialog.show();
+    }
+
+    public void btnPrmtBatteryLevel(View view){
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);

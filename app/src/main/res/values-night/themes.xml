@@ -6,6 +6,5 @@
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
-
     <color name="oui_bg">@color/sesl_round_and_bgcolor_dark</color>
 </resources>
