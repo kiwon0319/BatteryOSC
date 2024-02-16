@@ -5,4 +5,9 @@
         android:id="@+id/more_info"
         android:title="App Info"
         android:showAsAction="always"/>
+
+    <item
+        android:id="@+id/help"
+        android:title="Help"
+        android:showAsAction="always"/>
 </menu>

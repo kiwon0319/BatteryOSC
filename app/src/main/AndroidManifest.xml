@@ -30,7 +30,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".AppInfoActivity"/>
-        <activity android:name=".LabsActivity"
+        <activity
+            android:name=".LabsActivity"
+            android:parentActivityName=".MainActivity"/>
+        <activity
+            android:name=".HelpActivity"
             android:parentActivityName=".MainActivity"/>
 
         <service

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <dev.oneuiproject.oneui.layout.ToolbarLayout
+        android:id="@+id/toolbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="Help">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <dev.oneuiproject.oneui.widget.RoundLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@color/oui_background_color"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/guide"/>
+            </dev.oneuiproject.oneui.widget.RoundLinearLayout>
+
+            <TextView
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minLines="1"
+                android:maxLines="10"
+                android:text="기기의 배터리정보를 OSC를 이용하여 PC에 전송합니다.\n \t● 두 기기가 동일한 네트워크에 접속해 있어야 합니다.\n \t● PC의 올바른 IP주소를 입력하여야합니다. \n \t● OSC를 받는 소프트웨어에서 설정한 올바를 Port값을 입력하여야 합니다."/>
+        </LinearLayout>
+
+    </dev.oneuiproject.oneui.layout.ToolbarLayout>
+</LinearLayout>
