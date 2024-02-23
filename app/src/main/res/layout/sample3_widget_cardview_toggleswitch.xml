@@ -49,7 +49,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/cardview_title"
                     android:layout_alignStart="@id/cardview_title"
-                    android:paddingEnd="12.0dip"
+                    android:paddingEnd="12.0dp"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textAlignment="viewStart"
                     android:maxLines="10"
@@ -57,10 +57,19 @@
 
             </RelativeLayout>
 
-            <FrameLayout
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="start|center">
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <View
+                    android:id="@+id/toggle_divider"
+                    android:layout_width="@dimen/sesl_list_divider_height"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="12dp"
+                    android:background="?attr/listDividerColor"
+                    android:visibility="gone"/>
 
                 <androidx.appcompat.widget.SeslToggleSwitch
                     android:id="@+id/sesl_cardview_switch"
@@ -69,7 +78,7 @@
                     android:layout_gravity="center_vertical"
                     android:background="@null" />
 
-            </FrameLayout>
+            </LinearLayout>
 
         </LinearLayout>
 

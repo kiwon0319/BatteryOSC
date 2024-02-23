@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="preference" translatable="false">BatOSC</string>
+
+    <string name="key_port" translatable="false">port</string>
+    <string name="key_ip" translatable="false">ip</string>
+    <string name="key_prmtNm_bateeryLevel" translatable="false">batteryLevel</string>
+    <string name="key_prmtNm_isCharging" translatable="false">isCharging</string>
+    <string name="key_prmtPath" translatable="false">prmtPath</string>
+    <string name="key_labs_showPrmtPath" translatable="false">labs_showPrmtPath</string>
+    <string name="key_labs_sendBluetoothBattery" translatable="false">labs_sendBtBattery</string>
+
+    <string name="defaultValue_ip" translatable="false">192.168.0.1</string>
+    <string name="defaultValue_port" translatable="false">9000</string>
+    <string name="defaultValue_prmtPath" translatable="false">/avatar/parameters</string>
+    <string name="defaultValue_prmtNm_batteryLevel" translatable="false">battery_level</string>
+    <string name="defaultValue_prmtNm_isCharging" translatable="false">is_charging</string>
+</resources>

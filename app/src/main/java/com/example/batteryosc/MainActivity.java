@@ -4,10 +4,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.Dialog;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,7 +27,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -41,12 +36,11 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SeslSwitchBar;
-import androidx.appcompat.widget.SeslToggleSwitch;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.batteryosc.widget.CardView;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import java.util.regex.Pattern;
@@ -318,8 +312,8 @@ public class MainActivity extends AppCompatActivity {
         et.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_CLASS_PHONE);
 
         AlertDialog.Builder dlg = new AlertDialog.Builder(MainActivity.this);
-        dlg.setTitle("IP 주소 설정");
-        dlg.setMessage("이 기기의 배터리 정보를 전달할 클라이언트의 IP 주소를 입력합니다.");
+        dlg.setTitle(getText(R.string.title_setIPAddress));
+        dlg.setMessage(getText(R.string.msg_setIPAddress));
         dlg.setView(textfiled);
 
         //완료버튼
@@ -339,7 +333,6 @@ public class MainActivity extends AppCompatActivity {
         //취소버튼
         dlg.setNegativeButton(dev.oneuiproject.oneui.design.R.string.oui_common_cancel, new DialogInterface.OnClickListener(){
            public void onClick(DialogInterface dialog, int whichButton){
-
            }
         });
 
@@ -381,8 +374,8 @@ public class MainActivity extends AppCompatActivity {
         et.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         AlertDialog.Builder dlg = new AlertDialog.Builder(MainActivity.this);
-        dlg.setTitle("포트 설정");
-        dlg.setMessage("이 기기의 배터리 정보를 전달할 클라이언트의 포트를 입력합니다.");
+        dlg.setTitle(getText(R.string.title_setPortNumber));
+        dlg.setMessage(getText(R.string.msg_setPortNumber));
         dlg.setView(textfiled);
 
         //완료버튼
@@ -442,8 +435,8 @@ public class MainActivity extends AppCompatActivity {
         et.setText(prmtNm_prmtPath);
 
         AlertDialog.Builder dlg = new AlertDialog.Builder(MainActivity.this);
-        dlg.setTitle("파라미터 경로 설정");
-        dlg.setMessage("OSC 파라미터를 전달 할 경로를 설정합니다.");
+        dlg.setTitle(getText(R.string.title_setParameterPath));
+        dlg.setMessage(getText(R.string.msg_setParameterPath));
         dlg.setView(textField);
 
         //완료 버튼
@@ -504,8 +497,8 @@ public class MainActivity extends AppCompatActivity {
         et.setText(prmtNm_batteryLevel);
 
         AlertDialog.Builder dlg = new AlertDialog.Builder(MainActivity.this);
-        dlg.setTitle("파라미터 설정");
-        dlg.setMessage("이 기기의 배터리 정보를 전달될 파라미터명을 입력합니다.");
+        dlg.setTitle(getText(R.string.title_setParameterName));
+        dlg.setMessage(getText(R.string.msg_setParameterName));
         dlg.setView(textField);
 
         //완료 버튼
@@ -566,8 +559,8 @@ public class MainActivity extends AppCompatActivity {
         et.setText(prmtNm_isCharge);
 
         AlertDialog.Builder dlg = new AlertDialog.Builder(MainActivity.this);
-        dlg.setTitle("파라미터 설정");
-        dlg.setMessage("이 기기의 배터리 정보를 전달될 파라미터명을 입력합니다.");
+        dlg.setTitle(getText(R.string.title_setParameterName));
+        dlg.setMessage(getText(R.string.msg_setParameterName));
         dlg.setView(textField);
 
         //완료 버튼
@@ -635,7 +628,7 @@ public class MainActivity extends AppCompatActivity {
 
             text_batteryLevel.setText(String.format("%d%%", batteryLevel));
             if(isCharge){
-                text_batteryLevel.append("(충전중)");
+                text_batteryLevel.append(getText(R.string.charging));
             }
         }
     }

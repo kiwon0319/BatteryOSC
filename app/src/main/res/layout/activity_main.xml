@@ -11,10 +11,12 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
        <LinearLayout
            android:layout_width="match_parent"
            android:layout_height="match_parent"
            android:orientation="vertical">
+
            <androidx.appcompat.widget.SeslSwitchBar
                android:id="@+id/toggle_Send"
                android:layout_width="match_parent"
@@ -23,70 +25,70 @@
            <dev.oneuiproject.oneui.widget.Separator
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
-               android:text="Network"/>
+               android:text="@string/network"/>
 
            <dev.oneuiproject.oneui.widget.RoundLinearLayout
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:orientation="vertical"
                android:background="@color/oui_background_color">
-               <com.example.batteryosc.CardView
+               <com.example.batteryosc.widget.CardView
                    android:id="@+id/ip_addr"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
                    android:onClick="btnIpAddr"
-                   app:TitleText="IP"
+                   app:TitleText="@string/ip_address"
                    app:isSummayTextAccent="true"
                    app:SummaryText="192.168.0.1"/>
 
-               <com.example.batteryosc.CardView
+               <com.example.batteryosc.widget.CardView
                    android:id="@+id/port_name"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
                    android:onClick="btnPort"
                    app:isDividerViewVisible="true"
-                   app:TitleText="Port"
+                   app:TitleText="@string/port_number"
                    app:isSummayTextAccent="true"
-                   app:SummaryText="9000"/>
+                   app:SummaryText="@string/defaultValue_port"/>
            </dev.oneuiproject.oneui.widget.RoundLinearLayout>
            <dev.oneuiproject.oneui.widget.Separator
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
-               android:text="Parameter"/>
+               android:text="@string/parameter"/>
 
            <dev.oneuiproject.oneui.widget.RoundLinearLayout
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:orientation="vertical"
                android:background="@color/oui_background_color">
-               <com.example.batteryosc.CardView
+               <com.example.batteryosc.widget.CardView
                    android:id="@+id/prmt_prtmPath"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
                    android:onClick="btnPrmtPath"
-                   app:TitleText="Parameter path"
+                   app:TitleText="@string/parameter_path"
                    app:isSummayTextAccent="true"
-                   app:SummaryText="/avatar/parameters/"
+                   app:SummaryText="@string/defaultValue_prmtPath"
                    android:visibility="gone"/>
 
-               <com.example.batteryosc.CardView
+               <com.example.batteryosc.widget.CardView
                    android:id="@+id/parm_batteryLevel"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
                    android:onClick="btnPrmtBatteryLevel"
-                   app:TitleText="Battery Level"
+                   app:TitleText="@string/battery_level"
                    app:isSummayTextAccent="true"
-                   app:SummaryText="battery_level"/>
+                   app:SummaryText="@string/defaultValue_prmtNm_batteryLevel"/>
 
-               <com.example.batteryosc.CardView
+               <com.example.batteryosc.widget.CardView
                    android:id="@+id/parm_IsCharging"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
                    android:onClick="btnParmIsCharging"
-                   app:TitleText="Is Charging"
+                   app:TitleText="@string/charging_status"
                    app:isDividerViewVisible="true"
                    app:isSummayTextAccent="true"
-                   app:SummaryText="is_charge"/>
+                   app:SummaryText="@string/defaultValue_prmtNm_isCharging"/>
            </dev.oneuiproject.oneui.widget.RoundLinearLayout>
 
            <dev.oneuiproject.oneui.widget.Separator
@@ -97,12 +99,12 @@
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:background="@color/oui_background_color">
-               <com.example.batteryosc.CardView
+               <com.example.batteryosc.widget.CardView
                    android:id="@+id/labs"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
                    android:onClick="btn_labs"
-                   app:TitleText="실험실"/>
+                   app:TitleText="@string/labs"/>
            </dev.oneuiproject.oneui.widget.RoundLinearLayout>
 
        </LinearLayout>

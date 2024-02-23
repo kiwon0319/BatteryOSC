@@ -1,3 +1,42 @@
 <resources>
     <string name="app_name">BatteryOSC</string>
+
+    <!-- Main activity -->
+    <string name="network">Network</string>
+    <string name="parameter">Parameter</string>
+    <string name="ip_address">IP Address</string>
+    <string name="port_number">Port</string>
+    <string name="parameter_path">Parameter path</string>
+    <string name="battery_level">Battery level</string>
+    <string name="charging_status">Charging status</string>
+    <string name="labs">Labs</string>
+
+    <!-- Main activity appbar -->
+    <string name="charging">(Charging)</string>
+
+    <string name="menu_help">Help</string>
+
+    <!-- Dialog -->
+    <string name="title_setIPAddress">Set IP address</string>
+    <string name="title_setPortNumber">Set port</string>
+    <string name="title_setParameterPath">Set parameter path</string>
+    <string name="title_setParameterName">Set parameter name</string>
+
+    <string name="msg_setIPAddress">Enter the IP address of the client that will forward this device"'"s battery information</string>
+    <string name="msg_setPortNumber">Enter the port number of the client that will forward this device"'"s battery information</string>
+    <string name="msg_setParameterPath">Enter the parameter path that will transmit OSC data</string>
+    <string name="msg_setParameterName">Enter the parameter name that will forward this device"'"s battery information</string>
+
+    <!-- Labs activity -->
+
+    <string name="labs_guide">Try experimental features. Some features may not work correctly with all devices.</string>
+
+    <string name="labs_parameterPath">Edit parameter path</string>
+    <string name="labs_bluetoothBattery">Bluetooth battery</string>
+
+    <string name="labs_summary_parameterPath">Allow edit parameter path. If disable it parameter path will set default.</string>
+    <string name="labs_summary_bluetoothBattery">Send bluetooth battery information via OSC</string>
+
+    <string name="help">Help</string>
+    <string name="help_guide">Send device"'"s battery information to PC via OSC\n \t● Both devices must be connected to the same network\n \t● Enter correct IP address \n \t● Enter correct port number.</string>
 </resources>

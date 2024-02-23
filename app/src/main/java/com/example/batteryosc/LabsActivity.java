@@ -1,31 +1,37 @@
 package com.example.batteryosc;
 
-import android.content.IntentFilter;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
+import android.view.View;
 import android.widget.CompoundButton;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SeslToggleSwitch;
+
+import com.example.batteryosc.widget.CardView;
 
 public class LabsActivity extends AppCompatActivity {
 
     static final String PREFS = "BatOSC";
     static final String KEY_LABS_SHOW_PRAMETER_PATH = "labs_prmtPath";
+    static final String KEY_LABS_SEND_BLUETOOTH_BATTERY = "labs_sendBtBattery";
 
     CardView card_prmtPath;
+    CardView card_btBattery;
 
     private SharedPreferences mprefs;
     private SharedPreferences.Editor editor;
 
     boolean setting_showPrmtPath;
+    boolean setting_sendBtBattery;
+
 
     //<커스텀 함수>
     private void init(){
+
+
         card_prmtPath = (CardView) findViewById(R.id.card_prmtPath);
         SeslToggleSwitch toggleSwitch = (SeslToggleSwitch) card_prmtPath.findViewById(R.id.sesl_cardview_switch);
 
@@ -35,6 +41,35 @@ public class LabsActivity extends AppCompatActivity {
         }else{
             toggleSwitch.setChecked(false);
         }
+
+        card_btBattery = (CardView) findViewById(R.id.card_btBattery);
+        SeslToggleSwitch toggle_sendBtbattery = card_btBattery.findViewById(R.id.sesl_cardview_switch);
+
+        if (setting_sendBtBattery){
+            toggle_sendBtbattery.setChecked(true);
+        }else {
+            toggle_sendBtbattery.setChecked(false);
+        }
+
+        toggle_sendBtbattery.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    setting_sendBtBattery = true;
+                }else {
+                    setting_sendBtBattery = false;
+                }
+                editor.putBoolean(KEY_LABS_SEND_BLUETOOTH_BATTERY, setting_sendBtBattery);
+                editor.apply();
+            }
+        });
+        card_btBattery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LabsActivity.this, LabsBluetoothBatteryActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     //</커스텀 함수>
@@ -55,6 +90,7 @@ public class LabsActivity extends AppCompatActivity {
         Log.d("trace", "loaded saved data: " + mprefs.getAll());
 
         setting_showPrmtPath = mprefs.getBoolean(KEY_LABS_SHOW_PRAMETER_PATH, false);
+        setting_sendBtBattery = mprefs.getBoolean(KEY_LABS_SEND_BLUETOOTH_BATTERY, false);
 
         init();
 

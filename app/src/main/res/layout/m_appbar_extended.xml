@@ -14,15 +14,15 @@
             android:gravity="center"
             android:textSize="40sp"
             android:textColor="@color/oui_primary_text_color"
-            android:text="현재 배터리"/>
+            android:text="@string/app_name"/>
 
         <TextView
             android:id="@+id/text_batteryLevel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:drawableLeft="@drawable/ic_oui_battery"
             android:textColor="@color/oui_primary_text_color"
-            android:textSize="16sp"
-            android:text="100%" />
+            android:textSize="16sp"/>
     </LinearLayout>
 </FrameLayout>

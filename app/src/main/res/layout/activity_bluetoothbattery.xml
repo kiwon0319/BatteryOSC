@@ -2,11 +2,11 @@
 <dev.oneuiproject.oneui.layout.ToolbarLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:expanded="false"
-    app:title="@string/labs">
-
+    app:title="Bluetooth battery"
+    app:expanded="false">
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -14,27 +14,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
-            <dev.oneuiproject.oneui.widget.RoundLinearLayout
+            <androidx.appcompat.widget.SeslSwitchBar
+                android:id="@+id/switchBar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/labs_thumb"
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    android:background="@color/white"/>
-            </dev.oneuiproject.oneui.widget.RoundLinearLayout>
-
-            <TextView
-                style="?android:attr/listSeparatorTextViewStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minLines="1"
-                android:maxLines="10"
-                android:textColor="@color/oui_primary_text_color"
-                android:text="@string/labs_guide"/>
+                android:layout_height="wrap_content"/>
 
             <dev.oneuiproject.oneui.widget.Separator
                 android:layout_width="match_parent"
@@ -45,21 +28,18 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@color/oui_background_color">
+
                 <com.example.batteryosc.widget.CardView
-                    android:id="@+id/card_prmtPath"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:TitleText="@string/labs_parameterPath"
-                    app:SummaryText="@string/labs_summary_parameterPath"
-                    app:isToggleSwitch="true"/>
+                    app:TitleText="test1"/>
+
                 <com.example.batteryosc.widget.CardView
-                    android:id="@+id/card_btBattery"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:isDividerViewVisible="true"
-                    app:TitleText="@string/labs_bluetoothBattery"
-                    app:SummaryText="@string/labs_summary_bluetoothBattery"
-                    app:isToggleSwitch="true"/>
+                    app:TitleText="test2"/>
+
             </dev.oneuiproject.oneui.widget.RoundLinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

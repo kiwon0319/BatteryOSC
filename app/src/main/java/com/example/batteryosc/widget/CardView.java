@@ -1,4 +1,4 @@
-package com.example.batteryosc;
+package com.example.batteryosc.widget;
 
 import static com.example.batteryosc.R.color.color_accent;
 
@@ -31,6 +31,7 @@ public class CardView extends LinearLayout {
     private TextView mSummaryTextView;
     private SeslToggleSwitch mToggleswitch;
     private View mDividerView;
+    private View mToggledivider;
 
     private int mIconColor;
     private Drawable mIconDrawable;
@@ -74,8 +75,9 @@ public class CardView extends LinearLayout {
         }else if(mIsToogleSwitch){
             inflate(mContext, R.layout.sample3_widget_cardview_toggleswitch, this);
             mToggleswitch = (SeslToggleSwitch) findViewById(R.id.sesl_cardview_switch);
+            mToggledivider = findViewById(R.id.toggle_divider);
 
-            setOnClickListener(new OnClickListener() {
+            super.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mToggleswitch.isChecked()){
@@ -127,6 +129,14 @@ public class CardView extends LinearLayout {
         setClickable(enabled);
         mParentView.setEnabled(enabled);
         mContainerView.setAlpha(enabled ? 1.0f : 0.4f);
+    }
+
+    @Override
+    public void setOnClickListener(OnClickListener onClickListener){
+        if(mIsToogleSwitch){
+            mToggledivider.setVisibility(View.VISIBLE);
+        }
+        super.setOnClickListener(onClickListener);
     }
 
     public String getTitleText() {
