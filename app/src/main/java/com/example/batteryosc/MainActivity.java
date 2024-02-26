@@ -40,6 +40,7 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.batteryosc.util.SensorUtil;
 import com.example.batteryosc.widget.CardView;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
